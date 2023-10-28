@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Install dependencies
+npm install
+
 # Install the Prisma CLI globally with Node.js 16.13
 nvm use 16.13.0
 npm install -g prisma
