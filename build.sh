@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Set the Node.js version
-nvm use 16.13.0
-
 # Install dependencies
 npm install
 
