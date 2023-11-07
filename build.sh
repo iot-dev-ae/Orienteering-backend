@@ -8,3 +8,6 @@ npm install -g prisma
 
 # Generate the Prisma client library
 prisma generate
+
+# Start the server
+node app.js

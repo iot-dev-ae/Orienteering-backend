@@ -11,7 +11,31 @@ datasource db {
 }
 
 model Patient {
-  id       String @id
-  password String
-  iban     String
+  id              String         @id
+  password        String
+  iban            String
+  mutualSocietyId Int?
+  mutualSociety   MutualSociety? @relation(fields: [mutualSocietyId], references: [id])
+  repayments      Repayment[]
+}
+
+model MutualSociety {
+  id                Int       @id @default(autoincrement())
+  name              String
+  percentageCovered Float
+  patients          Patient[]
+}
+
+model Repayment {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  location  String?
+
+  totalPrice        Float
+  percentageCovered Float?
+
+  intervention           String
+  interventionCommentary String?
 }

@@ -1,8 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 // Import the functions for creating patients and verifying login
-const { createPatient, verifyPatientLogin } = require('../controllers/patientController');
+const {
+  createPatient,
+  verifyPatientLogin,
+} = require("../controllers/patientController");
 
 /**
  * @swagger
@@ -25,22 +28,24 @@ const { createPatient, verifyPatientLogin } = require('../controllers/patientCon
  *                 type: string
  *               iban:
  *                 type: string
+ *               mutualSocietyId:
+ *                type: integer
  *     responses:
  *       201:
  *         description: Patient registered successfully
  *       500:
  *         description: Error during patient registration
  */
-router.post('/register', async (req, res) => {
-  const { patientId, password, iban } = req.body;
-  
+router.post("/register", async (req, res) => {
+  const { patientId, password, iban, mutualSocietyId } = req.body;
+
   try {
-    const patientData = { patientId, password,  iban };
+    const patientData = { patientId, password, iban, mutualSocietyId };
     await createPatient(patientData);
-    res.status(201).json({ message: 'Patient registered successfully' });
+    res.status(201).json({ message: "Patient registered successfully" });
   } catch (error) {
-    console.error('Error during patient registration:', error);
-    res.status(500).json({ error: 'Error during patient registration' });
+    console.error("Error during patient registration:", error);
+    res.status(500).json({ error: "Error during patient registration" });
   }
 });
 
@@ -69,12 +74,15 @@ router.post('/register', async (req, res) => {
  *       401:
  *         description: Login failed
  */
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   const { patientId, password } = req.body;
-  
+
   const patient = await verifyPatientLogin(patientId, password);
-  if (patient) {res.status(200).json({ message: 'Login successful', patient });} 
-  else {res.status(401).json({ error: 'Login failed' });}
+  if (patient) {
+    res.status(200).json({ message: "Login successful", patient });
+  } else {
+    res.status(401).json({ error: "Login failed" });
+  }
 });
 
 module.exports = router;
