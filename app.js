@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const patientRoutes = require("./routes/patientRoutes"); // Import your route definitions
-const repaymentRoutes = require("./routes/mutualSocietyRoutes");
+const repaymentRoutes = require("./routes/repaymentRoutes");
 const swaggerUi = require("swagger-ui-express");
 
 const swaggerSpec = require("./swagger");

@@ -38,6 +38,7 @@ async function createRepayment(repaymentData) {
         totalPrice,
         percentageCovered,
         intervention,
+        interventionCommentary,
       },
     })
     .catch((error) => {
@@ -55,4 +56,23 @@ function calculateRepayment(totalPrice, percentageCovered) {
 module.exports = {
   createRepayment,
   calculateRepayment,
+};
+
+async function getRepaymentDetailsByPatientId(patientId) {
+  try {
+    const repaymentDetails = await prisma.repayment.findMany({
+      where: {
+        patientId: patientId,
+      },
+    });
+
+    return repaymentDetails;
+  } catch (error) {
+    console.error("Error while fetching repayment details:", error);
+    throw new Error("Error while fetching repayment details");
+  }
+}
+
+module.exports = {
+  getRepaymentDetailsByPatientId,
 };

@@ -5,6 +5,7 @@ const { getPatientById } = require("../controllers/patientController");
 const {
   createRepayment,
   calculateRepayment,
+  getRepaymentDetailsByPatientId,
 } = require("../controllers/repaymentController");
 
 /**
@@ -133,6 +134,97 @@ router.post("/calculate-repayment", async (req, res) => {
   } catch (error) {
     console.error("Error during repayment:", error);
     res.status(500).json({ error: "Error during repayment" });
+  }
+});
+
+/**
+ * @swagger
+ * /repayment/get-repayment-details/{patientId}:
+ *   get:
+ *     tags:
+ *       - Repayments
+ *     summary: Get repayment details for a patient.
+ *     description: Retrieves repayment details for a patient based on the provided patientId.
+ *     parameters:
+ *       - in: path
+ *         name: patientId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The patient's ID to get repayment details for.
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of repayment details.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RepaymentDetails'
+ *       404:
+ *         description: Patient or repayment details not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     RepaymentDetails:
+ *       type: object
+ *       properties:
+ *         intervention:
+ *           type: string
+ *           description: The type of intervention.
+ *         totalPrice:
+ *           type: number
+ *           description: The total price of the intervention.
+ *         percentageCovered:
+ *           type: number
+ *           description: The percentage covered by the mutual society.
+ *       example:
+ *         intervention: "Surgery"
+ *         totalPrice: 1000
+ *         percentageCovered: 90
+ *
+ *     Error:
+ *       type: object
+ *       properties:
+ *         error:
+ *           type: string
+ *           description: A description of the error.
+ *       example:
+ *         error: "Patient not found"
+ */
+router.get("/get-repayment-details/:patientId", async (req, res) => {
+  const patientId = req.params.patientId;
+
+  try {
+    const patient = await getPatientById(patientId);
+
+    if (!patient) {
+      return res.status(404).json({ error: "Patient not found" });
+    }
+
+    const repaymentDetails = await getRepaymentDetailsByPatientId(patientId);
+
+    if (!repaymentDetails) {
+      return res.status(404).json({ error: "Repayment details not found" });
+    }
+
+    res.status(200).json(repaymentDetails);
+  } catch (error) {
+    console.error("Error during retrieval of repayment details:", error);
+    res
+      .status(500)
+      .json({ error: "Error during retrieval of repayment details" });
   }
 });
 
