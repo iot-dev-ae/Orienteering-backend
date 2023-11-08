@@ -30,7 +30,6 @@ async function verifyPatientLogin(patientId, password) {
   try {
     // Find the patient by username
     const patient = await prisma.patient.findUnique({
-      select: { id: true },
       where: { id: patientId },
     });
 
@@ -44,7 +43,7 @@ async function verifyPatientLogin(patientId, password) {
 
     if (isPasswordValid) {
       console.log("Login successful");
-      return patient;
+      return patient.id;
     } else {
       console.error("Invalid password");
       return null;

@@ -77,9 +77,12 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { patientId, password } = req.body;
 
-  const patient = await verifyPatientLogin(patientId, password);
+  const returnedPatient = await verifyPatientLogin(patientId, password);
+
   if (patient) {
-    res.status(200).json({ message: "Login successful", patient });
+    res
+      .status(200)
+      .json({ message: "Login successful", pateintId: returnedPatient });
   } else {
     res.status(401).json({ error: "Login failed" });
   }
