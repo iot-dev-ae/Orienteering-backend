@@ -79,7 +79,7 @@ router.post("/login", async (req, res) => {
 
   const returnedPatient = await verifyPatientLogin(patientId, password);
 
-  if (patient) {
+  if (returnedPatient) {
     res
       .status(200)
       .json({ message: "Login successful", pateintId: returnedPatient });
