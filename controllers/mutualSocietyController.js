@@ -23,7 +23,7 @@ async function getMutualSocietyById(societyId) {
 
 async function getAllMutualSociety() {
   try {
-    const societies = await prisma.findMany();
+    const societies = await prisma.mutualSociety.findMany();
 
     return societies;
   } catch (error) {
