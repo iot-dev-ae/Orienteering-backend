@@ -10,7 +10,11 @@ const options = {
     },
     servers: [{ url: "/api/module/mutuelle" }, { url: "/" }],
   },
-  apis: ["./routes/patientRoutes.js", "./routes/repaymentRoutes.js"], // Replace with the path to your route files
+  apis: [
+    "./routes/patientRoutes.js",
+    "./routes/repaymentRoutes.js",
+    "./routes/mutualSocietyRoutes.js",
+  ], // Replace with the path to your route files
 };
 
 const swaggerSpec = swaggerJSDoc(options);
