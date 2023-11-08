@@ -53,11 +53,6 @@ function calculateRepayment(totalPrice, percentageCovered) {
   return (1 - percentageCovered / 100) * totalPrice;
 }
 
-module.exports = {
-  createRepayment,
-  calculateRepayment,
-};
-
 async function getRepaymentDetailsByPatientId(patientId) {
   try {
     const repaymentDetails = await prisma.repayment.findMany({
@@ -74,5 +69,7 @@ async function getRepaymentDetailsByPatientId(patientId) {
 }
 
 module.exports = {
+  createRepayment,
+  calculateRepayment,
   getRepaymentDetailsByPatientId,
 };
