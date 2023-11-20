@@ -16,13 +16,22 @@ async function createPatient(patientData) {
       },
     })
     .catch((error) => {
+      if (error.code === "P2002") {
+        throw new Error("Patient with ID already exists");
+      }
       console.error("Error creating patient:", error);
     })
     .finally(async () => {
       await prisma.$disconnect();
     });
 
-  console.log("New patient created:", newPatient);
+  const returnPatient = {
+    id: newPatient.id,
+    iban: newPatient.iban,
+  };
+
+  console.log("New patient created:", returnPatient);
+  return returnPatient;
 }
 
 // Verify patient login
@@ -43,7 +52,13 @@ async function verifyPatientLogin(patientId, password) {
 
     if (isPasswordValid) {
       console.log("Login successful");
-      return patient.id;
+
+      const returnPatient = {
+        id: patient.id,
+        iban: patient.iban,
+      };
+
+      return returnPatient;
     } else {
       console.error("Invalid password");
       return null;

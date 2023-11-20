@@ -17,6 +17,9 @@ app.use("/patient", patientRoutes); // Mount the user routes at /user
 app.use("/repayment", repaymentRoutes);
 app.use("/mutual-society", mutualSocietyRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// app.use("/^/api-docs$/", (req, res, next) => {
+//   res.redirect("/api-docs/");
+// });
 
 // Start the server
 const port = process.env.PORT || 3000; // Use the provided port or a default (3000)
