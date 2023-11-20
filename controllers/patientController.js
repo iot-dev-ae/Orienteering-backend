@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const { hash, verify } = require("../utils/crypt");
+const { getMutualSocietyById } = require("./mutualSocietyController");
 const prisma = new PrismaClient();
 
 // Create a new patient
@@ -25,9 +26,12 @@ async function createPatient(patientData) {
       await prisma.$disconnect();
     });
 
+  const mutualSociety = await getMutualSocietyById(newPatient.mutualSocietyId);
+
   const returnPatient = {
     id: newPatient.id,
     iban: newPatient.iban,
+    mutualSociety: mutualSociety,
   };
 
   console.log("New patient created:", returnPatient);
@@ -40,6 +44,9 @@ async function verifyPatientLogin(patientId, password) {
     // Find the patient by username
     const patient = await prisma.patient.findUnique({
       where: { id: patientId },
+      include: {
+        mutualSociety: true,
+      },
     });
 
     if (!patient) {
@@ -56,6 +63,7 @@ async function verifyPatientLogin(patientId, password) {
       const returnPatient = {
         id: patient.id,
         iban: patient.iban,
+        mutualSociety: patient.mutualSociety,
       };
 
       return returnPatient;
