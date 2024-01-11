@@ -65,6 +65,28 @@ async function getAllLogs() {
     }
 }
 
+async function getLogsByParams(params) {
+    try {
+        const logs = await prisma.log.findMany({
+            where: {
+                AND: [
+                    { datetime: { gte: params.start } },
+                    { datetime: { lte: params.end } },
+                    { type: params.type },
+                    { module: params.module },
+                    { metadata: params.metadata},
+                ],
+            },
+        });
+        return logs;
+    } catch (error) {
+        console.error("Error during log retrieval:", error);
+    } finally {
+        await prisma.$disconnect();
+    }
+}
+
+
 module.exports = {
     createLog,
     getAllLogs,

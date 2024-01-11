@@ -62,7 +62,17 @@ async function checkBeacon(runnerData) {
     console.log(`Runner ${runnerData.id_runner} checked beacon ${runnerData.beacon_name} during race ${runnerData.id_race}`);
 
     } catch (error) {
-        throw new Error(error.message);
+        // Handle different error scenarios
+        if (error.message === "No beacon with this name was found") {
+            // Handle this specific case
+            return { success: false, error: "No beacon found with the given name" };
+        } else if (error.message === "Runner too far from the beacon") {
+            // Handle this specific case
+            return { success: false, error: "Runner is too far from the beacon" };
+        } else {
+            // Handle other generic errors
+            return { success: false, error: "An error occurred during beacon check" };
+        }
     }
   }
 

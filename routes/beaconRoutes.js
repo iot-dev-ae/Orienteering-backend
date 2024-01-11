@@ -75,13 +75,23 @@ router.post("/checkBeacon", async (req, res) => {
     const {runnerData } = req.body;
 
     try {
-        await checkBeacon(runnerData);
-        res
-            .status(200)
-            .json({ message: "Beacon successfully checked " });
+        const result = await checkBeacon(runnerData);
+
+        if (result.success) {
+            res.status(200).json({ message: "Beacon successfully checked" });
+        } else {
+            // Handle different error scenarios
+            if (result.error === "No beacon found with the given name") {
+                res.status(404).json({ error: result.error });
+            } else if (result.error === "Runner is too far from the beacon") {
+                res.status(400).json({ error: result.error });
+            } else {
+                res.status(500).json({ error: "An error occurred during beacon check" });
+            }
+        }
     } catch (error) {
-        console.error("Error during beacon check :", error);
-        res.status(500).json({ error: error.message });
+        console.error("Error during beacon check:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 
 });
