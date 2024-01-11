@@ -47,7 +47,8 @@ model RunnerToRace{
 
 model Beacon {
   id              Int         @id @default(autoincrement())
-  id_race         Int         
+  id_race         Int     
+  name            String      @db.VarChar(256)    
   race            Race        @relation(fields: [id_race], references: [id], onDelete: Cascade)
   pos_GPS         Float[]
 

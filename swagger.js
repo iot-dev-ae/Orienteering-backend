@@ -13,6 +13,7 @@ const options = {
     "./routes/runnerRoutes.js",
     "./routes/raceRoutes.js",
     "./routes/logRoutes.js",
+    "./routes/beaconRoutes.js",
   ], // Replace with the path to your route files
 };
 
