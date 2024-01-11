@@ -71,6 +71,7 @@ async function checkBeacon(runnerData) {
             return { success: false, error: "Runner is too far from the beacon" };
         } else {
             // Handle other generic errors
+            console.error("Error during beacon check:", error);
             return { success: false, error: "An error occurred during beacon check" };
         }
     }
