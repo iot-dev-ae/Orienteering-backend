@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const LogTypes = {
+    Log: 'Log',
     Info: 'Info',
     Warning: 'Warning',
     Error: 'Error',

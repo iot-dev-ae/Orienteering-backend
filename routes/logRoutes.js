@@ -47,9 +47,17 @@ const {
  */
 router.post("/createLog", async (req, res) => {
     const logData = req.body;
-    const newLog = await createLog(logData);
-    res.status(200);
-        
+
+    try {
+        const newLog = await createLog(logData);
+        res
+            .status(200)
+            .json({ message: "Log successfully saved " });
+    } catch (error) {
+        console.error("Error during race fetching:", error);
+        res.status(500).json({ error: "Error during log saving" });
+    }
+
 });
 
 /**
