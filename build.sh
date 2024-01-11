@@ -6,8 +6,8 @@ npm install
 # Install the Prisma CLI globally
 npm install -g prisma
 
-# Update dependencies
-npm update
+# Install Express
+npm install express
 
 # Generate the Prisma client library
 prisma generate
