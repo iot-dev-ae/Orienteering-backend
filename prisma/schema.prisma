@@ -26,8 +26,7 @@ model Race {
   id              Int         @id @default(autoincrement())
   name            String
   dateTime        DateTime
-  start           DateTime?
-  end             DateTime?
+  status          String
   beacons         Beacon[] 
   participants    RunnerToRace[]
 
@@ -60,6 +59,7 @@ model Log {
   datetime        DateTime
   type            String     @db.VarChar(256)
   module          String     @db.VarChar(256)
+  metadata        Float[]    
   message         String     @db.VarChar(256)
 
   @@map("logs")

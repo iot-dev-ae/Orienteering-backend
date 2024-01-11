@@ -1,100 +1,97 @@
 const { PrismaClient } = require("@prisma/client");
-const { hash, verify } = require("../utils/crypt");
 const prisma = new PrismaClient();
 
-// Create a new runner
-async function createRunner(runnerData) {
-  const hashedPassword = await hash(runnerData.password);
+const RaceStatus = {
+  Pending: 'Pending',
+  InProgress: 'In Progress',
+  Completed: 'Completed',
+  Canceled: 'Canceled',
+};
 
-  const newRunner = await prisma.runner
+function isValidRaceStatus(newStatus) {
+  Object.values(RaceStatus).includes(newStatus);
+}
+
+// Create a new race
+async function createRace(raceData) {
+
+  const newRace = await prisma.race
     .create({
       data: {
-        id: runnerData.runnerId,
-        firstname: runnerData.firstname,
-        lastname: runnerData.lastname,
-        birthdate: new Date(runnerData.birthdate).toISOString(),
-        login: runnerData.login,
-        password: hashedPassword,
+        name: raceData.name,
+        dateTime: raceData.dateTime,
+        status: RaceStatus.Pending,
+        beacons: raceData.beacons,
       },
     })
     .catch((error) => {
-      if (error.code === "P2002") {
-        throw new Error("Runner with this login already exists");
-      }
-      console.error("Error creating runner:", error);
+      console.error("Error creating race:", error);
     })
     .finally(async () => {
       await prisma.$disconnect();
     });
 
-  const returnRunner = {
-    id: newRunner.id,
-    firstname: newRunner.firstname,
-    lastname: newRunner.lastname,
-    login: newRunner.login,
+  const returnRace = {
+    id: newRace.id,
+    name: newRace.name,
+    dateTime: newRace.dateTime,
+    beacons: newRace.beacons,
   };
 
-  console.log("New runner created:", returnRunner);
-  return returnRunner;
+  console.log("New race created:", returnRace);
+  return returnRace;
 }
 
-// Verify runner login
-async function verifyRunnerLogin(login, password) {
+async function getRaceById(raceId) {
   try {
-    // Find the runner by username
-    const runner = await prisma.runner.findUnique({
-      where: { login: login }
+    const race = await prisma.race.findUnique({
+      where: { id: parseInt(raceId) },
+      include :{
+        beacons: true,
+        participants: true,
+      },
     });
 
-    if (!runner) {
-      console.error("Runner not found");
-      return null;
+    if (!race) {
+      throw new Error("No race with this ID was found");
     }
 
-    // Verify the provided password
-    const isPasswordValid = await verify(password, runner.password);
-
-    if (isPasswordValid) {
-      console.log("Login successful");
-
-      const returnRunner = {
-        id: runner.id,
-        firstname: runner.firstname,
-        lastname: runner.lastname,
-        login: runner.login,
-      };
-
-      return returnRunner;
-    } else {
-      console.error("Invalid password");
-      return null;
-    }
+    return race;
   } catch (error) {
-    console.error("Error during login:", error);
+    console.error("Error getting race:", error);
     return null;
   }
 }
 
-async function getRunnerById(runnerId) {
-  try {
-    const runner = await prisma.runner.findUnique({
-      where: { id: runnerId },
-    });
+async function updateRace(raceData) {
+  try{  
 
-    if (!runner) {
-      console.error("Runner not found");
-      return null;
+    if (raceData.status) {
+      const isValidStatus=isValidRaceStatus(raceData.status);
+
+        if(!isValidStatus){
+          throw new Error("Invalid status");
+        }
     }
 
-    return runner;
-  } catch (error) {
-    console.error("Error getting runner:", error);
-    return null;
+    const updatedRace = await prisma.race.update({
+      where : {id:parseInt(raceData.id)},
+        data: raceData,
+        
+      })
+
+      return updatedRace;
   }
+  catch (error) {
+    console.error("Error updating race status :", error)
+    return false;
+  }
+
 }
+
 
 module.exports = {
-  createRunner,
-  verifyRunnerLogin,
-  getRunnerById,
+  createRace,
+  getRaceById,
+  updateRace,
 };

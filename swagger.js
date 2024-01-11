@@ -11,8 +11,8 @@ const options = {
   },
   apis: [
     "./routes/runnerRoutes.js",
-    "./routes/repaymentRoutes.js",
-    "./routes/mutualSocietyRoutes.js",
+    "./routes/raceRoutes.js",
+    "./routes/logRoutes.js",
   ], // Replace with the path to your route files
 };
 

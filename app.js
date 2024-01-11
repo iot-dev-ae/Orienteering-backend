@@ -2,8 +2,8 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const runnerRoutes = require("./routes/runnerRoutes"); // Import your route definitions
-// const repaymentRoutes = require("./routes/repaymentRoutes");
-// const mutualSocietyRoutes = require("./routes/mutualSocietyRoutes");
+const raceRoutes = require("./routes/raceRoutes");
+const logRoutes = require("./routes/logRoutes");
 const swaggerUi = require("swagger-ui-express");
 
 const swaggerSpec = require("./swagger");
@@ -14,8 +14,8 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 
 // Define your routes
 app.use("/runner", runnerRoutes); // Mount the user routes at /user
-// app.use("/repayment", repaymentRoutes);
-// app.use("/mutual-society", mutualSocietyRoutes);
+app.use("/race", raceRoutes);
+app.use("/log", logRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Start the server
