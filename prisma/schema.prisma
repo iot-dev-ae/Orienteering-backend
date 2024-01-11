@@ -10,32 +10,57 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Patient {
-  id              String         @id
+model Runner {
+  id              Int         @id @default(autoincrement())
   password        String
-  iban            String
-  mutualSocietyId Int?
-  mutualSociety   MutualSociety? @relation(fields: [mutualSocietyId], references: [id])
-  repayments      Repayment[]
+  login           String      @unique @db.VarChar(256)
+  fistname        String      @db.VarChar(256)
+  lastname        String      @db.VarChar(256)
+  birthdate       DateTime
+  races           RunnerToRace[]
+
+  @@map("runners")
 }
 
-model MutualSociety {
-  id                Int       @id @default(autoincrement())
-  name              String
-  percentageCovered Float
-  patients          Patient[]
+model Race {
+  id              Int         @id @default(autoincrement())
+  name            String
+  DateTime        DateTime
+  start           DateTime
+  end             DateTime
+  beacons         Beacon[] 
+  participants    RunnerToRace[]
+
+  @@map("races")
 }
 
-model Repayment {
-  id        Int      @id @default(autoincrement())
-  date      DateTime
-  patientId String
-  patient   Patient  @relation(fields: [patientId], references: [id])
-  location  String?
+model RunnerToRace{
+  runnerId        Int
+  raceId          Int
+  bibNumber       Int
+  totalTime       Float?
+  runner          Runner @relation(fields: [runnerId], references: [id])
+  Race            Race  @relation(fields: [raceId], references: [id])
 
-  totalPrice        Float
-  percentageCovered Float?
+  @@id([runnerId, raceId])
+  @@map("runner_race")
+}
 
-  intervention           String
-  interventionCommentary String?
+model Beacon {
+  id              Int         @id @default(autoincrement())
+  id_race         Int         
+  race            Race        @relation(fields: [id_race], references: [id], onDelete: Cascade)
+  pos_GPS         Float[]
+
+  @@map("beacons")
+}
+
+model Log {
+  id              Int         @id @default(autoincrement())
+  datetime        DateTime
+  type            String     @db.VarChar(256)
+  module          String     @db.VarChar(256)
+  message         String     @db.VarChar(256)
+
+  @@map("logs")
 }

@@ -4,11 +4,10 @@ const options = {
   definition: {
     openapi: "3.0.0", // Specify the OpenAPI version
     info: {
-      title: "SIH MUTUELLE API",
+      title: "Orienteering API",
       version: "1.0.0",
       description: "Your API description",
     },
-    servers: [{ url: "/api/module/mutuelle" }, { url: "/" }],
   },
   apis: [
     "./routes/patientRoutes.js",
