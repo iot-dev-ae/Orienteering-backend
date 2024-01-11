@@ -16,7 +16,6 @@ const {
 
 /**
  * @swagger
- * path:
  *   /log/createLog:
  *     post:
  *       summary: Create a new log entry
@@ -62,7 +61,6 @@ router.post("/createLog", async (req, res) => {
 
 /**
  * @swagger
- * path:
  *   /log/getAllLogs:
  *     get:
  *       summary: Get all logs

@@ -60,7 +60,7 @@ model Log {
   type            String     @db.VarChar(256)
   module          String     @db.VarChar(256)
   metadata        Float[]    
-  message         String     @db.VarChar(256)
+  message         String?     @db.VarChar(256)
 
   @@map("logs")
 }

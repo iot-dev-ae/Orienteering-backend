@@ -9,7 +9,7 @@ const LogTypes = {
 };
 
 function isValidLogType(newType) {
-    Object.values(LogTypes).includes(newType);
+    return Object.values(LogTypes).includes(newType);
 }
 
 const LogModules = {
@@ -19,7 +19,7 @@ const LogModules = {
 };
 
 function isValidLogModule(newModule) {
-    Object.values(LogModules).includes(newModule);
+    return Object.values(LogModules).includes(newModule);
 }
 
 // Create a new log
@@ -35,15 +35,16 @@ async function createLog(logData) {
     const newLog = await prisma.log
         .create({
             data: {
-                dateTime: logData.dateTime,
-                type: logData,
+                datetime: new Date(logData.datetime),
+                type: logData.type,
                 module: logData.module,
                 metadata: logData.metadata,
-                message: logData.beacons,
+                message: logData.message,
             },
         })
         .catch((error) => {
             console.error("Error creating log:", error);
+            throw new Error("Error creating log");
         })
         .finally(async () => {
             await prisma.$disconnect();
