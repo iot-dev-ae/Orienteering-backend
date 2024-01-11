@@ -10,7 +10,7 @@ const options = {
     },
   },
   apis: [
-    "./routes/patientRoutes.js",
+    "./routes/runnerRoutes.js",
     "./routes/repaymentRoutes.js",
     "./routes/mutualSocietyRoutes.js",
   ], // Replace with the path to your route files

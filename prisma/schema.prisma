@@ -14,7 +14,7 @@ model Runner {
   id              Int         @id @default(autoincrement())
   password        String
   login           String      @unique @db.VarChar(256)
-  fistname        String      @db.VarChar(256)
+  firstname        String      @db.VarChar(256)
   lastname        String      @db.VarChar(256)
   birthdate       DateTime
   races           RunnerToRace[]
@@ -25,9 +25,9 @@ model Runner {
 model Race {
   id              Int         @id @default(autoincrement())
   name            String
-  DateTime        DateTime
-  start           DateTime
-  end             DateTime
+  dateTime        DateTime
+  start           DateTime?
+  end             DateTime?
   beacons         Beacon[] 
   participants    RunnerToRace[]
 
