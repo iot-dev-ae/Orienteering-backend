@@ -17,12 +17,12 @@ async function checkBeacon(runnerData) {
             datetime: new Date(),
             type: "Warning",
             module: "Beacon",
-            metadata:[runnerData.id_race, 
-                runnerData.id_runner, 
-                -1, 
-                runnerPos.longitude, 
-                runnerPos.latitude, 
-                runnerPos.altitude,],
+            id_runner:runnerData.id_runner,
+            id_race:runnerData.id_race,
+            id_beacon:beacon.id,
+            runner_longitude:runnerPos.longitude,
+            runner_latitude:runnerPos.latitude,
+            runner_altitude:runnerPos.altitude,
             message: "No beacon with this name was found",
         });
         throw new Error("No beacon with this name was found");
@@ -43,12 +43,12 @@ async function checkBeacon(runnerData) {
             datetime: new Date(),
             type: "Warning",
             module: "Beacon",
-            metadata:[runnerData.id_race, 
-                runnerData.id_runner, 
-                beacon.id, 
-                runnerPos.longitude, 
-                runnerPos.latitude, 
-                runnerPos.altitude,],
+            id_runner:runnerData.id_runner,
+            id_race:runnerData.id_race,
+            id_beacon:beacon.id,
+            runner_longitude:runnerPos.longitude,
+            runner_latitude:runnerPos.latitude,
+            runner_altitude:runnerPos.altitude,
             message: "Runner too far from the beacon",
         });
         throw new Error("Runner too far from the beacon");
@@ -61,18 +61,18 @@ async function checkBeacon(runnerData) {
     .sort((a, b) => a.datetime - b.datetime); console.log(sortedLogs);
 
     if (sortedLogs.length > 0) {
-        //     createLog({
-        //     datetime: new Date(),
-        //     type: "Warning",
-        //     module: "Beacon",
-        //     metadata:[runnerData.id_race, 
-        //         runnerData.id_runner, 
-        //         beacon.id, 
-        //         runnerPos.longitude, 
-        //         runnerPos.latitude, 
-        //         runnerPos.altitude],
-        //     message: `Beacon already checked`,
-        // });
+            createLog({
+            datetime: new Date(),
+            type: "Warning",
+            module: "Beacon",
+            id_runner:runnerData.id_runner,
+            id_race:runnerData.id_race,
+            id_beacon:beacon.id,
+            runner_longitude:runnerPos.longitude,
+            runner_latitude:runnerPos.latitude,
+            runner_altitude:runnerPos.altitude,
+            message: `Beacon already checked`,
+        });
         throw new Error("Beacon already checked");
     }
 
@@ -80,12 +80,12 @@ async function checkBeacon(runnerData) {
         datetime: new Date(),
         type: "Log",
         module: "Beacon",
-        metadata:[runnerData.id_race, 
-            runnerData.id_runner, 
-            beacon.id, 
-            runnerPos.longitude, 
-            runnerPos.latitude, 
-            runnerPos.altitude],
+        id_runner:runnerData.id_runner,
+        id_race:runnerData.id_race,
+        id_beacon:beacon.id,
+        runner_longitude:runnerPos.longitude,
+        runner_latitude:runnerPos.latitude,
+        runner_altitude:runnerPos.altitude,
         message: `Runner ${runnerData.id_runner} checked beacon ${runnerData.beacon_name} during race ${runnerData.id_race}`,
     });
     

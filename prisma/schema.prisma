@@ -18,6 +18,8 @@ model Runner {
   lastname        String      @db.VarChar(256)
   birthdate       DateTime
   races           RunnerToRace[]
+  logs_runner     Log_Runner[]
+  logs_beacon     Log_Beacon[]
 
   @@map("runners")
 }
@@ -29,6 +31,8 @@ model Race {
   status          String
   beacons         Beacon[] 
   participants    RunnerToRace[]
+  logs_runner     Log_Runner[]
+  logs_beacon     Log_Beacon[]
 
   @@map("races")
 }
@@ -51,17 +55,43 @@ model Beacon {
   name            String      @db.VarChar(256)    
   race            Race        @relation(fields: [id_race], references: [id], onDelete: Cascade)
   pos_GPS         Float[]
+  logs_beacon     Log_Beacon[]
 
   @@map("beacons")
 }
 
-model Log {
+model Log_Runner {
   id              Int         @id @default(autoincrement())
   datetime        DateTime
   type            String     @db.VarChar(256)
-  module          String     @db.VarChar(256)
-  metadata        Float[]    
+  id_race         Int
+  id_runner       Int
+  longitude       Float
+  latitude        Float
+  altitude        Float
+  message         String?     @db.VarChar(256)
+  runner          Runner @relation(fields: [id_runner], references: [id])
+  Race            Race  @relation(fields: [id_race], references: [id])
+
+  @@map("logs_runner")
+}
+
+model Log_Beacon {
+  id              Int         @id @default(autoincrement())
+  datetime        DateTime
+  type            String     @db.VarChar(256)
+  id_race         Int
+  id_runner       Int
+  id_beacon       Int
+  runner_longitude       Float
+  runner_latitude        Float
+  runner_altitude        Float
   message         String?     @db.VarChar(256)
 
-  @@map("logs")
+  runner          Runner @relation(fields: [id_runner], references: [id])
+  Race            Race  @relation(fields: [id_race], references: [id])
+  beacon          Beacon @relation(fields: [id_beacon], references: [id])
+  
+
+  @@map("logs_beacon")
 }

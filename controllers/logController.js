@@ -32,26 +32,58 @@ async function createLog(logData) {
         throw new Error("Invalid log  type");
     }
 
-    const newLog = await prisma.log
+    if(logData.module==="Beacon" ){
+        const newLog = await prisma.log_Beacon
         .create({
             data: {
                 datetime: new Date(logData.datetime),
                 type: logData.type,
-                module: logData.module,
-                metadata: logData.metadata,
+                id_race:logData.id_race,
+                id_runner:logData.id_runner,
+                id_beacon:logData.id_beacon,
+                runner_longitude:logData.runner_longitude,
+                runner_latitude:logData.runner_latitude,
+                runner_altitude:logData.runner_altitude,
                 message: logData.message,
             },
         })
         .catch((error) => {
-            console.error("Error creating log:", error);
-            throw new Error("Error creating log");
+            console.error("Error creating beacon log:", error);
+            throw new Error("Error creating beacon log");
         })
         .finally(async () => {
             await prisma.$disconnect();
         });
+        console.log("New log created:", newLog);
+        return newLog;
+    }
+    else if(logData.module==="Runner" ){
 
-    console.log("New log created:", newLog);
-    return newLog;
+        const newLog = await prisma.log_Runner
+            .create({
+                data: {
+                    datetime: new Date(logData.datetime),
+                    type: logData.type,
+                    id_race:logData.id_race,
+                    id_runner:logData.id_runner,
+                    longitude:logData.runner_longitude,
+                    latitude:logData.runner_latitude,
+                    altitude:logData.runner_altitude,
+                    message: logData.message,
+                },
+            })
+            .catch((error) => {
+                console.error("Error creating log:", error);
+                throw new Error("Error creating log");
+            })
+            .finally(async () => {
+                await prisma.$disconnect();
+            });
+            console.log("New log created:", newLog);
+            return newLog;
+        }
+
+    
 }
 
 async function getAllLogs() {
