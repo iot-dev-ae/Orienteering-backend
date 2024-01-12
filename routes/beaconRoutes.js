@@ -72,7 +72,7 @@ const {
  *                     description: Error message during beacon check
  */
 router.post("/checkBeacon", async (req, res) => {
-    const runnerData  = req.body;
+    const {runnerData}  = req.body;
 
     try {
         const result = await checkBeacon(runnerData);

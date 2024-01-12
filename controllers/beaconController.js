@@ -4,13 +4,14 @@ const {createLog, getAllLogs, getLogsByParams} = require("./logController");
 
 async function checkBeacon(runnerData) {
     try{
-    const beacons = await prisma.beacon.findMany({
-        select: {id:true,pos_GPS: true},
-        where: { id_race: runnerData.id_race , name: runnerData.beacon_name }
-    });
+        const beacons = await prisma.beacon.findMany({
+            select: {id:true,pos_GPS: true},
+            where: { id_race: runnerData.id_race , name: runnerData.beacon_name }
+        });
     
     const beacon = beacons[0];
-    const runnerPos=runnerData.runner_pos_GPS
+    
+    const runnerPos=runnerData.runner_pos_GPS;
     
     if (!beacon) {
         createLog({
@@ -19,7 +20,7 @@ async function checkBeacon(runnerData) {
             module: "Beacon",
             id_runner:runnerData.id_runner,
             id_race:runnerData.id_race,
-            id_beacon:beacon.id,
+            id_beacon:-1,
             runner_longitude:runnerPos.longitude,
             runner_latitude:runnerPos.latitude,
             runner_altitude:runnerPos.altitude,
@@ -54,13 +55,11 @@ async function checkBeacon(runnerData) {
         throw new Error("Runner too far from the beacon");
     }
 
-    const params = {type:"Warning",module:"Beacon"   }
-    const logs=await getAllLogs(params);
-    const sortedLogs = logs
-    .filter(log => log.metadata && log.metadata[0] === runnerData.id_race&& log.metadata[1] === runnerData.id_race && log.metadata[2] === beacon.id)
-    .sort((a, b) => a.datetime - b.datetime); console.log(sortedLogs);
+    const params = {type:"Warning",module:"Beacon",id_race:runnerData.id_race,id_runner:runnerData.id_runner,id_beacon:beacon.id   }
+    const logs=await getLogsByParams(params);
+    
 
-    if (sortedLogs.length > 0) {
+    if (logs.length > 0) {
             createLog({
             datetime: new Date(),
             type: "Warning",
