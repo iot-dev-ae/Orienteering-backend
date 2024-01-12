@@ -20,7 +20,7 @@ async function checkBeacon(runnerData) {
             module: "Beacon",
             id_runner:runnerData.id_runner,
             id_race:runnerData.id_race,
-            id_beacon:-1,
+            id_beacon:null,
             runner_longitude:runnerPos.longitude,
             runner_latitude:runnerPos.latitude,
             runner_altitude:runnerPos.altitude,

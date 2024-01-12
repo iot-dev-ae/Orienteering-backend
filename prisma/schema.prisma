@@ -82,7 +82,7 @@ model Log_Beacon {
   type            String     @db.VarChar(256)
   id_race         Int
   id_runner       Int
-  id_beacon       Int
+  id_beacon       Int?
   runner_longitude       Float
   runner_latitude        Float
   runner_altitude        Float
@@ -90,7 +90,7 @@ model Log_Beacon {
 
   runner          Runner @relation(fields: [id_runner], references: [id])
   Race            Race  @relation(fields: [id_race], references: [id])
-  beacon          Beacon @relation(fields: [id_beacon], references: [id])
+  beacon          Beacon? @relation(fields: [id_beacon], references: [id])
   
 
   @@map("logs_beacon")
