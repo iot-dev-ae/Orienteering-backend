@@ -27,11 +27,18 @@ async function checkBeacon(runnerData) {
         });
         throw new Error("No beacon with this name was found");
     }
-    const beaconPos = beacon.pos_GPS;
+    const beaconPos = beacon.pos_GPS; //console.log(beacons[0],beacon,beaconPos);
 
-    const distance = Math.sqrt(Math.pow((beaconPos[0] - runnerPos.longitude), 2) 
-                    + Math.pow((beaconPos[1] - runnerPos.latitude), 2));
-    if(distance > beaconPos[2]){
+    const distance = calculateDistance(
+        runnerPos.latitude,
+        runnerPos.longitude,
+        beaconPos[1],
+        beaconPos[0]
+      ); console.log(distance);
+      
+      const thresholdDistanceMeters = 5; // Adjust as needed
+      
+      if (distance > thresholdDistanceMeters) {
         createLog({
             datetime: new Date(),
             type: "Warning",
@@ -54,12 +61,14 @@ async function checkBeacon(runnerData) {
         metadata:[runnerData.id_race, 
             runnerData.id_runner, 
             beacon.id, 
-            runnerData.pos_GPS[0], 
-            runnerData.pos_GPS[1], 
-            runnerData.pos_GPS[2]],
+            runnerPos.longitude, 
+            runnerPos.latitude, 
+            runnerPos.altitude],
         message: `Runner ${runnerData.id_runner} checked beacon ${runnerData.beacon_name} during race ${runnerData.id_race}`,
     });
+    
     console.log(`Runner ${runnerData.id_runner} checked beacon ${runnerData.beacon_name} during race ${runnerData.id_race}`);
+    return { success: true };
 
     } catch (error) {
         // Handle different error scenarios
@@ -75,6 +84,25 @@ async function checkBeacon(runnerData) {
             return { success: false, error: "An error occurred during beacon check" };
         }
     }
+  }
+
+  function calculateDistance(lat1, lon1, lat2, lon2) {
+    // Convert latitude and longitude from degrees to radians
+    const toRadians = angle => (angle * Math.PI) / 180;
+    lat1 = toRadians(lat1);
+    lon1 = toRadians(lon1);
+    lat2 = toRadians(lat2);
+    lon2 = toRadians(lon2);
+  
+    // Haversine formula to calculate distance
+    const R = 6371 * 1000; // Earth radius in meters
+    const dlat = lat2 - lat1;
+    const dlon = lon2 - lon1;
+    const a = Math.sin(dlat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+  
+    return distance;
   }
 
   module.exports = {
