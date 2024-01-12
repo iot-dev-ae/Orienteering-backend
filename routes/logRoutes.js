@@ -45,6 +45,7 @@ const {
  *           description: Log entry created successfully
  */
 router.post("/createLog", async (req, res) => {
+    console.log("req.body", req.body)
     const logData = req.body;
 
     try {

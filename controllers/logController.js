@@ -24,7 +24,7 @@ function isValidLogModule(newModule) {
 
 // Create a new log
 async function createLog(logData) {
-
+    
     if (!isValidLogModule(logData.module)) {
         throw new Error("Invalid log  module");
     }
@@ -66,9 +66,9 @@ async function createLog(logData) {
                     type: logData.type,
                     id_race:logData.id_race,
                     id_runner:logData.id_runner,
-                    longitude:logData.runner_longitude,
-                    latitude:logData.runner_latitude,
-                    altitude:logData.runner_altitude,
+                    longitude:logData.longitude,
+                    latitude:logData.latitude,
+                    altitude:logData.altitude,
                     message: logData.message,
                 },
             })
@@ -82,6 +82,8 @@ async function createLog(logData) {
             console.log("New log created:", newLog);
             return newLog;
         }
+    
+
 
     
 }
