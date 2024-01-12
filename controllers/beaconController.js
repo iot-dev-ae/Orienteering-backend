@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const {createLog} = require("./logController");
+const {createLog, getAllLogs, getLogsByParams} = require("./logController");
 
 async function checkBeacon(runnerData) {
     try{
@@ -34,7 +34,7 @@ async function checkBeacon(runnerData) {
         runnerPos.longitude,
         beaconPos[1],
         beaconPos[0]
-      ); console.log(distance);
+      );
       
       const thresholdDistanceMeters = 5; // Adjust as needed
       
@@ -52,6 +52,28 @@ async function checkBeacon(runnerData) {
             message: "Runner too far from the beacon",
         });
         throw new Error("Runner too far from the beacon");
+    }
+
+    const params = {type:"Warning",module:"Beacon"   }
+    const logs=await getAllLogs(params);
+    const sortedLogs = logs
+    .filter(log => log.metadata && log.metadata[0] === runnerData.id_race&& log.metadata[1] === runnerData.id_race && log.metadata[2] === beacon.id)
+    .sort((a, b) => a.datetime - b.datetime); console.log(sortedLogs);
+
+    if (sortedLogs.length > 0) {
+        //     createLog({
+        //     datetime: new Date(),
+        //     type: "Warning",
+        //     module: "Beacon",
+        //     metadata:[runnerData.id_race, 
+        //         runnerData.id_runner, 
+        //         beacon.id, 
+        //         runnerPos.longitude, 
+        //         runnerPos.latitude, 
+        //         runnerPos.altitude],
+        //     message: `Beacon already checked`,
+        // });
+        throw new Error("Beacon already checked");
     }
 
     createLog({
@@ -78,7 +100,12 @@ async function checkBeacon(runnerData) {
         } else if (error.message === "Runner too far from the beacon") {
             // Handle this specific case
             return { success: false, error: "Runner is too far from the beacon" };
-        } else {
+            
+        } else if (error.message === "Beacon already checked") {
+            // Handle this specific case
+            return { success: false, error: "Beacon already checked" };
+            
+        }else {
             // Handle other generic errors
             console.error("Error during beacon check:", error);
             return { success: false, error: "An error occurred during beacon check" };

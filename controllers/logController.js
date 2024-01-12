@@ -67,18 +67,21 @@ async function getAllLogs() {
 
 async function getLogsByParams(params) {
     try {
-        const logs = await prisma.log.findMany({
+        var logs = await prisma.log.findMany({
             where: {
                 AND: [
                     { datetime: { gte: params.start } },
                     { datetime: { lte: params.end } },
                     { type: params.type },
                     { module: params.module },
-                    { metadata: params.metadata},
                 ],
             },
         });
-        return logs;
+        if(params.metadata){
+            logs = filterLogsByMetadata(logs, params.metadata); console.log("Flogs",logs);
+        }
+            return logs;
+
     } catch (error) {
         console.error("Error during log retrieval:", error);
     } finally {
@@ -86,8 +89,23 @@ async function getLogsByParams(params) {
     }
 }
 
+function filterLogsByMetadata(logs, MyArray) {
+    console.log("logs",logs);
+    console.log("myarray",MyArray);
+    return logs.filter(log => {
+        if (log.metadata) {
+           const a=log.metadata.every((value, index) => MyArray[index] ? parseFloat(value) ==parseFloat(MyArray[index]):false);
+           console.log("a",a);
+           return a;
+        //   return MyArray.every((value, index) => value === log[index]);
+        }
+        return false;
+      });
+    }
+
 
 module.exports = {
     createLog,
     getAllLogs,
+    getLogsByParams,
 };
